@@ -1,7 +1,4 @@
 #! /bin/sh
-OPF="manifest.opf"
-TOC="toc.html"
-CONTENT="body.html"
 if test "$1" == ""; then
   echo "TOC file is not specified."
   exit 1
@@ -9,6 +6,10 @@ elif test ! -e $1; then
   echo "$1 is not exist."
   exit 1
 fi
+PATHFILE=${1%.*} #パス付きファイル名（拡張子削除）
+OPF="$PATHFILE.opf"
+TOC="${PATHFILE}-toc.html"
+CONTENT="$PATHFILE.html"
 while read LINE
 do
   KEY=${LINE%:*}
@@ -41,7 +42,7 @@ cat << EOM > $OPF
 <manifest>
   <item id="cover-image" media-type="image/jpg" href="${COVER}" properties="cover-image" />
   <item id="toc" properties="nav" href="${TOC}" media-type="application/xhtml+xml" />
-  <item id="content" media-type="application/xhtml+xml" href="body.html" />
+  <item id="content" media-type="application/xhtml+xml" href="${CONTENT}" />
 </manifest>
 
 <spine>
@@ -52,7 +53,7 @@ cat << EOM > $OPF
 
 <nav epub:type="landmarks">
   <ol>
-    <li><a epub:type="cover-image" href="cover.jpg">表紙</a></li>
+    <li><a epub:type="cover-image" href="${COVER}">表紙</a></li>
     <li><a epub:type="toc" href="${TOC}">目次</a></li>
   </ol>
 </nav>
@@ -141,7 +142,7 @@ else
     fi
     echo $LINE | sed 's/\[\([^|]*\)\|\([^]]*\)\]/<ruby>\1<rp>（<\/rp><rt>\2<\/rt><rp>）<\/rp><\/ruby>/g' >> $CONTENT
   done < ${INDEX}.txt
-echo "<p style='page-break-after:always'><a epub:type='toc' href='toc.html#index'>もくじにもどる</a></p>" >> $CONTENT
+echo "<p style='page-break-after:always'><a epub:type='toc' href='${TOC}#index'>もくじにもどる</a></p>" >> $CONTENT
 fi
 done
 cat << BODYT >> $CONTENT
