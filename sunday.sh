@@ -23,6 +23,11 @@ do
     COVER=$VALUE;;
     'body')
     BODY="${BODY} ${VALUE}";;
+    'vertical')
+    if test "$VALUE" == "on"; then
+      VERTICAL="  body{-epub-writing-mode:vertical-rl}"
+      PAGENATION=" page-progression-direction='rtl'"
+    fi;;
   esac
 done < $1
 # --- Manifest Code ---
@@ -45,7 +50,7 @@ cat << EOM > $OPF
   <item id="content" media-type="application/xhtml+xml" href="${CONTENT}" />
 </manifest>
 
-<spine>
+<spine${PAGENATION}>
   <itemref idref="cover-image" />
   <itemref idref="toc" />
   <itemref idref="content" />
@@ -68,10 +73,12 @@ cat << TOCH > $TOC
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <style>
+${VERTICAL}
   ol {
     border:solid 1px #ccc;
     background:#eee;
     padding:1em 2em;
+    list-style:none;
   }
 </style>
 </head>
@@ -90,8 +97,8 @@ else
   while read LINE
   do
     if test "`echo $LINE | grep -e '^# '`"; then
-			HEADLINE=`echo $LINE | cut -d ' ' -f 2-`
-		fi
+      HEADLINE=`echo $LINE | cut -d ' ' -f 2-`
+    fi
   done < ${INDEX}.txt
   echo "  <li><a epub:type="toc" href=\"${CONTENT}#${INDEX}\">${HEADLINE}</a></li>" >> $TOC
 fi
@@ -110,6 +117,7 @@ cat << BODYH > $CONTENT
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <style>
+${VERTICAL}
   p {text-indent:1em;}
 </style>
 </head>
