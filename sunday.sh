@@ -10,6 +10,7 @@ PATHFILE=${1%.*} #パス付きファイル名（拡張子削除）
 OPF="$PATHFILE.opf"
 TOC="${PATHFILE}-toc.html"
 CONTENT="$PATHFILE.html"
+STYLESHEET="$PATHFILE.css"
 while read LINE
 do
   KEY=${LINE%:*}
@@ -25,7 +26,7 @@ do
     BODY="${BODY} ${VALUE}";;
     'vertical')
     if test "$VALUE" == "on"; then
-      VERTICAL="  body{-epub-writing-mode:vertical-rl}"
+      VERTICAL="body{-epub-writing-mode:vertical-rl}"
       PAGENATION=" page-progression-direction='rtl'"
     fi;;
   esac
@@ -72,21 +73,13 @@ cat << TOCH > $TOC
 <html lang='ja'>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<style>
-${VERTICAL}
-  ol {
-    border:solid 1px #ccc;
-    background:#eee;
-    padding:1em 2em;
-    list-style:none;
-  }
-</style>
+<link rel="stylesheet" type="text/css" href="${STYLESHEET}">
 </head>
 <body>
 <h1 id="index">${TITLE}</h1>
 <h2>目次</h2>
 <nav epub:type="toc">
-<ol>
+<ol id="toc">
 TOCH
 for INDEX in $BODY
 do
@@ -116,10 +109,7 @@ cat << BODYH > $CONTENT
 <html lang='ja'>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<style>
-${VERTICAL}
-  p {text-indent:1em;}
-</style>
+<link rel="stylesheet" type="text/css" href="${STYLESHEET}">
 </head>
 <body>
 BODYH
@@ -158,3 +148,15 @@ cat << BODYT >> $CONTENT
 </html>
 BODYT
 # --- Body Code ---
+# --- Style Code ---
+cat << STYLE > $STYLESHEET
+p {text-indent:1em;}
+#toc {
+  border:solid 1px #ccc;
+  background:#eee;
+  padding:1em 2em;
+  list-style:none;
+}
+${VERTICAL}
+STYLE
+# --- Style Code ---

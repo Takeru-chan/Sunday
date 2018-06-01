@@ -1,4 +1,4 @@
-﻿# Sunday
+# Sunday
 Kindle book preprocessor for KindleGen  
 
 ## What's this?｜これはなに？
@@ -13,6 +13,7 @@ KindleGenコマンドを使ってKindle本を作るためのプリプロセッ�
 - 本文ファイル（中間ファイル）：book.html  
 - 目次ファイル（中間ファイル）：book-toc.html  
 - 出版物ヘッダファイル（中間ファイル）：book.opf
+- スタイルシートファイル（中間ファイル）：book.css  
 - 電子書籍ファイル（Kindle本）：book.mobi  
 
 構成ファイルで以下の情報を指定します。
@@ -29,7 +30,6 @@ KindleGenコマンドを使ってKindle本を作るためのプリプロセッ�
 たとえばこんな感じ。  
 
 ```
-
 identifier:sample-data
 title:This is a sample book
 cover:/path/cover.jpg
@@ -66,8 +66,9 @@ vertical:on
 ### コンパイルする
 sunday.shはシェルスクリプトです。unixらしきもののターミナル上で実行してください。上記構成ファイルを引数に与えて実行します。  
 
-```
+※いまのところWindows版のGit Bashではルビの変換がうまくいきません。
 
+```
 $ ./sunday.sh book.structure
 
 ```
@@ -75,7 +76,6 @@ $ ./sunday.sh book.structure
 エラーがなければ中間ファイルが生成されます。これら中間ファイルのうちの出版物ヘッダファイル（book.opf）をkindlegenに与えて実行します。  
 
 ```
-
 $ kindlegen book.opf
 
 ```
