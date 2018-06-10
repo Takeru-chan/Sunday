@@ -134,7 +134,7 @@ else
     elif test "$INITIAL" == '~'; then
       LINE=`echo $LINE | sed 's/^~\(.*\)/<p style="margin-left:1em;">\1<\/p>/'`
     elif test "$INITIAL" == '{'; then
-      LINE=`echo $LINE | sed 's/{\(.*\)!\(.*\)}/<tr><th style="padding-left:1em;padding-right:0.5em;border-right:solid 1px #aaa;">\1<\/th><td style="padding-left:0.5em">\2<\/td><\/tr>/g'`
+      LINE=`echo $LINE | sed 's/{\(.*\)!\(.*\)}/<tr><th class="character">\1<\/th><td class="dialogue">\2<\/td><\/tr>/g'`
     elif test "$INITIAL" != '<'; then
       LINE=`echo $LINE | echo "<p>${LINE}</p>"`
     fi
@@ -156,6 +156,15 @@ p {text-indent:1em;}
   background:#eee;
   padding:1em 2em;
   list-style:none;
+}
+.character {
+  width:3em;
+  padding-left:1em;
+  padding-right:0.5em;
+  border-right:solid 1px #aaa;
+}
+.dialogue {
+  padding-left:0.5em
 }
 ${VERTICAL}
 STYLE
